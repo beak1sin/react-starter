@@ -1,33 +1,50 @@
-## 프로젝트 브랜치 안내
+# React + TypeScript + Vite
 
-이 프로젝트는 다양한 설정과 기능을 실험하기 위해 여러 개의 브랜치로 구성되어 있습니다. 각 브랜치의 특징과 사용 방법은 아래와 같습니다:
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-1. **`eslint-airbnb` 브랜치**
+Currently, two official plugins are available:
 
-   - **설명:** Airbnb의 ESLint 규칙을 적용한 브랜치입니다.
-   - **사용 방법:**
-     ```bash
-     git checkout eslint-airbnb
-     ```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-2. **`eslint-biome` 브랜치**
+## Expanding the ESLint configuration
 
-   - **설명:** ESLint와 Prettier를 Biome으로 대체한 브랜치입니다.
-   - **사용 방법:**
-     ```bash
-     git checkout eslint-biome
-     ```
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-3. **`eslint-biome-tailwind-pretendard` 브랜치**
-   - **설명:** Biome 설정에 Tailwind CSS 4.0과 Pretendard 폰트를 추가한 브랜치입니다.
-   - **사용 방법:**
-     ```bash
-     git checkout eslint-biome-tailwind-pretendard
-     ```
+- Configure the top-level `parserOptions` property like this:
 
-각 브랜치로 전환한 후, 프로젝트의 의존성을 설치하고 개발 서버를 실행하려면 다음 명령어를 사용하세요:
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-```bash
-npm install
-npm run dev
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
+
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
 ```
